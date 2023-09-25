@@ -9,7 +9,6 @@ btnProduce.addEventListener('click', () => {
 });
 
 inputMessage.addEventListener('keyup', validateForm);
-inputQueue.addEventListener('keyup', validateForm);
 
 setInterval(() => {
     fetchMessages()
@@ -18,7 +17,7 @@ setInterval(() => {
         });
 }, 1000);
 
-async function produceMessage(message, queue) {
+async function produceMessage(message) {
     const response = await fetch("/api/produce.php", {
         method: "POST",
         headers: {
@@ -26,14 +25,13 @@ async function produceMessage(message, queue) {
         },
         body: JSON.stringify({
             message: message,
-            queue: queue,
         }),
     });
     return await response.json();
 }
 
 async function fetchMessages() {
-    const response = await fetch("/api/fetch.php?queue=" + outputQueue.value);
+    const response = await fetch("/api/fetch.php");
     return await response.json();
 }
 

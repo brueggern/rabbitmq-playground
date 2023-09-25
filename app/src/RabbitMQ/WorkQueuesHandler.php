@@ -10,11 +10,12 @@ class WorkQueuesHandler extends RabbitMQHandler
 {
     /**
      * @param string $message
-     * @param string $queueName
+     * @param string|null $queueName
+     * @param string|null $exchangeName
      * @return void
      * @throws Exception
      */
-    function produce(string $message, string $queueName): void
+    function produce(string $message, ?string $queueName = null, ?string $exchangeName = null): void
     {
         $this->declareQueue($queueName)
             ->sendMessage($message, $queueName)
@@ -22,11 +23,12 @@ class WorkQueuesHandler extends RabbitMQHandler
     }
 
     /**
-     * @param string $queueName
+     * @param string|null $queueName
+     * @param string|null $exchangeName
      * @return void
      * @throws Exception
      */
-    function consume(string $queueName): void
+    function consume(?string $queueName = null, ?string $exchangeName = null): void
     {
         $this->declareQueue($queueName)
             ->readMessages($queueName)
@@ -75,8 +77,8 @@ class WorkQueuesHandler extends RabbitMQHandler
      */
     protected function readMessages(string $queueName): self
     {
-        $callback = function ($msg) use ($queueName) {
-            (new FileLogger())->log($msg->body, $queueName);
+        $callback = function ($msg) {
+            (new FileLogger())->log($msg->body);
             echo ' [x] Received ', $msg->body, "\n";
             sleep(substr_count($msg->body, '.') + 2);
             echo " [x] Done\n";

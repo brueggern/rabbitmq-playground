@@ -9,19 +9,21 @@ $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
 $message = $data['message'] ?? null;
-$queue = $data['queue'] ?? null;
+$queueName = $_ENV['RABBITMQ_QUEUE'] ?? 'default';
+$exchangeName = $_ENV['RABBITMQ_EXCHANGE'] ?? 'default';
 
-if (!$message || !$queue) {
+if (!$message) {
     header("Content-Type: application/json");
     echo json_encode([
         'error' => true,
-        'message' => 'Missing message or queue',
+        'message' => 'Missing message',
     ]);
     exit();
 }
 
 try {
-    RabbitMQHandler::resolve($_ENV['HANDLER'])->produce($message, $queue);
+    RabbitMQHandler::resolve($_ENV['HANDLER'])
+        ->produce($message, $queueName, $exchangeName);
 } catch (Exception $e) {
     header("Content-Type: application/json");
     echo json_encode([
@@ -34,7 +36,8 @@ try {
 header("Content-Type: application/json");
 echo json_encode([
     'message' => $message,
-    'queue' => $queue,
+    'queue' => $queueName,
+    'exchange' => $exchangeName,
     'rabbitmq_host' => $_ENV["RABBITMQ_HOST"],
 ]);
 exit();

@@ -10,23 +10,25 @@ class PublishSubscribeHandler extends RabbitMQHandler
 {
     /**
      * @param string $message
-     * @param string $queueName
+     * @param string|null $queueName
+     * @param string|null $exchangeName
      * @return void
      * @throws Exception
      */
-    function produce(string $message, string $queueName): void
+    function produce(string $message, ?string $queueName = null, ?string $exchangeName = null): void
     {
         $this->declareQueue($queueName)
-            ->sendMessage($message, $queueName)
+            ->sendMessage($message, $exchangeName)
             ->close();
     }
 
     /**
-     * @param string $queueName
+     * @param string|null $queueName
+     * @param string|null $exchangeName
      * @return void
      * @throws Exception
      */
-    function consume(string $queueName): void
+    function consume(?string $queueName = null, ?string $exchangeName = null): void
     {
         $this->declareQueue($queueName)
             ->readMessages($queueName)
@@ -56,15 +58,15 @@ class PublishSubscribeHandler extends RabbitMQHandler
      * Send a message.
      *
      * @param string $message
-     * @param string $queueName
+     * @param string $exchangeName
      * @return $this
      */
-    protected function sendMessage(string $message, string $queueName): self
+    protected function sendMessage(string $message, string $exchangeName): self
     {
-        $data = $message . '...';
-        $msg = new AMQPMessage($data, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
+        $msg = new AMQPMessage($message, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
 
-        $this->channel->basic_publish($msg, '', $queueName);
+        $this->channel->exchange_declare($exchangeName, 'fanout', false, false, false);
+        $this->channel->basic_publish($msg, $exchangeName);
 
         return $this;
     }
@@ -75,8 +77,8 @@ class PublishSubscribeHandler extends RabbitMQHandler
      */
     protected function readMessages(string $queueName): self
     {
-        $callback = function ($msg) use ($queueName) {
-            (new FileLogger())->log($msg->body, $queueName);
+        $callback = function ($msg) {
+            (new FileLogger())->log($msg->body);
             echo ' [x] Received ', $msg->body, "\n";
             sleep(substr_count($msg->body, '.') + 2);
             echo " [x] Done\n";
