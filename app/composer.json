@@ -1,0 +1,20 @@
+{
+    "name": "brueggern/rabbitmq-playground",
+    "description": "RabbitMQ playground",
+    "type": "project",
+    "require": {
+        "php-amqplib/php-amqplib": ">=3.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Brueggern\\RabbitmqPlayground\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "brueggern",
+            "email": "brueggern@gmail.com"
+        }
+    ]
+}

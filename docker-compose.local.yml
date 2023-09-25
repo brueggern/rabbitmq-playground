@@ -1,0 +1,93 @@
+version: '3'
+
+services:
+
+  rabbitmq-broker:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-broker
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+
+  rabbitmq-producer:
+    image: rabbitmq-app
+    container_name: rabbitmq-app
+    build:
+      context: .
+      dockerfile: DockerfileApp
+    depends_on:
+      - rabbitmq-broker
+    ports:
+      - "80:80"
+    environment:
+      - RABBITMQ_HOST=rabbitmq-broker
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    volumes:
+      - ./app:/var/www/html
+
+  rabbitmq-consumer-calendar-1:
+    image: rabbitmq-consumer-calendar
+    container_name: rabbitmq-consumer-calendar-1
+    build:
+      context: .
+      dockerfile: DockerfileConsumer
+    depends_on:
+      rabbitmq-broker:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_HOST=rabbitmq-broker
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_QUEUE=queue-calendar
+    volumes:
+      - ./app:/var/www/html
+
+  rabbitmq-consumer-calendar-2:
+    image: rabbitmq-consumer-calendar
+    container_name: rabbitmq-consumer-calendar-2
+    build:
+      context: .
+      dockerfile: DockerfileConsumer
+    depends_on:
+      rabbitmq-broker:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_HOST=rabbitmq-broker
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_QUEUE=queue-calendar
+    volumes:
+      - ./app:/var/www/html
+
+  rabbitmq-consumer-activities:
+    image: rabbitmq-consumer-activities
+    container_name: rabbitmq-consumer-activities
+    build:
+      context: .
+      dockerfile: DockerfileConsumer
+    depends_on:
+      rabbitmq-broker:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_HOST=rabbitmq-broker
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_QUEUE=queue-calendar
+    volumes:
+      - ./app:/var/www/html
+
+networks:
+  default:
+    driver: bridge

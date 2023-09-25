@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+
+  rabbitmq-producer:
+    image: rabbitmq-app
+    container_name: rabbitmq-app
+    build:
+      context: .
+      dockerfile: DockerfileApp
+    ports:
+      - "80:80"
+    environment:
+      - RABBITMQ_HOST=${RABBITMQ_REMOTE_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_REMOTE_PORT}
+      - RABBITMQ_USER=${RABBITMQ_REMOTE_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_REMOTE_PASSWORD}
+      - HANDLER=${HANDLER}
+    volumes:
+      - ./app:/var/www/html
+
+  rabbitmq-consumer-calendar-1:
+    image: rabbitmq-consumer-calendar
+    container_name: rabbitmq-consumer-calendar-1
+    build:
+      context: .
+      dockerfile: DockerfileConsumer
+    environment:
+      - RABBITMQ_HOST=${RABBITMQ_REMOTE_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_REMOTE_PORT}
+      - RABBITMQ_USER=${RABBITMQ_REMOTE_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_REMOTE_PASSWORD}
+      - HANDLER=${HANDLER}
+      - RABBITMQ_QUEUE=queue-calendar
+    volumes:
+      - ./app:/var/www/html
+
+  rabbitmq-consumer-calendar-2:
+    image: rabbitmq-consumer-calendar
+    container_name: rabbitmq-consumer-calendar-2
+    build:
+      context: .
+      dockerfile: DockerfileConsumer
+    environment:
+      - RABBITMQ_HOST=${RABBITMQ_REMOTE_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_REMOTE_PORT}
+      - RABBITMQ_USER=${RABBITMQ_REMOTE_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_REMOTE_PASSWORD}
+      - HANDLER=${HANDLER}
+      - RABBITMQ_QUEUE=queue-calendar
+    volumes:
+      - ./app:/var/www/html
+
+  rabbitmq-consumer-activities:
+    image: rabbitmq-consumer-activities
+    container_name: rabbitmq-consumer-activities
+    build:
+      context: .
+      dockerfile: DockerfileConsumer
+    environment:
+      - RABBITMQ_HOST=${RABBITMQ_REMOTE_HOST}
+      - RABBITMQ_PORT=${RABBITMQ_REMOTE_PORT}
+      - RABBITMQ_USER=${RABBITMQ_REMOTE_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_REMOTE_PASSWORD}
+      - HANDLER=${HANDLER}
+      - RABBITMQ_QUEUE=queue-activities
+    volumes:
+      - ./app:/var/www/html
+
+networks:
+  default:
+    driver: bridge
