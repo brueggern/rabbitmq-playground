@@ -1,4 +1,5 @@
 const btnProduce = document.querySelector('#btnProduce');
+const btnClear = document.querySelector('#btnClear');
 const inputMessage = document.querySelector('#inputMessage');
 const inputQueue = document.querySelector('#inputQueue');
 const inputExchange = document.querySelector('#inputExchange');
@@ -7,6 +8,10 @@ const doConsume = document.querySelector('#doConsume');
 
 btnProduce.addEventListener('click', () => {
     send();
+});
+
+btnClear.addEventListener('click', () => {
+    clear();
 });
 
 inputMessage.addEventListener('keyup', validateForm);
@@ -42,6 +47,11 @@ async function fetchMessages() {
     return await response.json();
 }
 
+async function clearLogs() {
+    const response = await fetch("/api/clear.php");
+    return await response.json();
+}
+
 function validateForm(event) {
     if (event.keyCode === 13) {
         event.preventDefault();
@@ -57,4 +67,10 @@ function send() {
             inputMessage.value = '';
             btnProduce.disabled = true;
         });
+}
+
+function clear() {
+    clearLogs().then(function () {
+        queue.innerHTML = '';
+    });
 }

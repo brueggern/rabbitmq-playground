@@ -9,14 +9,13 @@
 </head>
 <body>
 <div class="uk-container">
-  <div class="uk-margin-top uk-text-center">
+  <div class="uk-margin-top uk-margin-bottom uk-text-center">
     <div class="uk-margin">Playground for</div>
     <img src="assets/RabbitMQ_logo.svg" alt="RabbitMQ logo" width="300px" class="uk-margin-bottom">
-    <hr>
   </div>
   <div class="uk-child-width-expand@s" uk-grid>
     <div>
-      <div class="uk-card uk-card-body">
+      <div class="uk-card uk-card-default uk-card-body">
         <h3 class="uk-card-title">Produce</h3>
         <div>
           <div class="uk-margin">
@@ -55,9 +54,21 @@
       </div>
     </div>
     <div>
-      <div class="uk-card uk-card-body">
+      <div class="uk-card uk-card-default uk-card-body">
         <h3 class="uk-card-title">Consume</h3>
-        <label><input class="uk-checkbox" type="checkbox" name="doConsume" id="doConsume" checked> Do consume</label>
+        <div class="uk-child-width-expand@s" uk-grid>
+          <div class="uk-margin-small-top">
+            <label>
+              <input class="uk-checkbox" type="checkbox" name="doConsume" id="doConsume" checked> Do
+              consume
+            </label>
+          </div>
+          <div class="uk-text-right">
+            <button class="uk-button uk-button-default" type="button" id="btnClear">
+              Clear
+            </button>
+          </div>
+        </div>
         <div class="uk-margin">
           <pre id="queue"></pre>
         </div>
