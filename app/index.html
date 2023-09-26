@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>RabbitMQ Playground</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.26/dist/css/uikit.min.css"/>
+  <link rel="icon" href="/assets/favicon.ico"/>
 </head>
 <body>
 <div class="uk-container">
@@ -15,9 +16,11 @@
   </div>
   <div class="uk-child-width-expand@s" uk-grid>
     <div>
-      <div class="uk-card uk-card-default uk-card-body">
-        <h3 class="uk-card-title">Produce</h3>
-        <div>
+      <div class="uk-card uk-card-default">
+        <div class="uk-card-header">
+          <h3 class="uk-card-title uk-text-bold">Produce</h3>
+        </div>
+        <div class="uk-card-body">
           <div class="uk-margin">
             <input
                     class="uk-input"
@@ -54,23 +57,27 @@
       </div>
     </div>
     <div>
-      <div class="uk-card uk-card-default uk-card-body">
-        <h3 class="uk-card-title">Consume</h3>
-        <div class="uk-child-width-expand@s" uk-grid>
-          <div class="uk-margin-small-top">
-            <label>
-              <input class="uk-checkbox" type="checkbox" name="doConsume" id="doConsume" checked> Do
-              consume
-            </label>
-          </div>
-          <div class="uk-text-right">
-            <button class="uk-button uk-button-default" type="button" id="btnClear">
-              Clear
-            </button>
-          </div>
+      <div class="uk-card uk-card-default">
+        <div class="uk-card-header">
+          <h3 class="uk-card-title uk-text-bold">Consume</h3>
         </div>
-        <div class="uk-margin">
-          <pre id="queue"></pre>
+        <div class="uk-card-body">
+          <div class="uk-child-width-expand@s" uk-grid>
+            <div>
+              <label>
+                <input class="uk-checkbox" type="checkbox" name="doConsume" id="doConsume" checked>
+                <span class="uk-text-bold">Do consume</span>
+              </label>
+            </div>
+            <div class="uk-text-right">
+              <button class="uk-button uk-button-default" type="button" id="btnClear">
+                Clear
+              </button>
+            </div>
+          </div>
+          <div class="uk-margin">
+            <pre id="queue"></pre>
+          </div>
         </div>
       </div>
     </div>

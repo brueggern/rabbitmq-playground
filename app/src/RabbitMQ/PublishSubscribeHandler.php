@@ -17,8 +17,7 @@ class PublishSubscribeHandler extends RabbitMQHandler
      */
     function produce(string $message, ?string $queueName = null, ?string $exchangeName = null): void
     {
-        $this->declareQueue($queueName)
-            ->sendMessage($message, $exchangeName)
+        $this->sendMessage($message, $exchangeName)
             ->close();
     }
 
@@ -30,28 +29,8 @@ class PublishSubscribeHandler extends RabbitMQHandler
      */
     function consume(?string $queueName = null, ?string $exchangeName = null): void
     {
-        $this->declareQueue($queueName)
-            ->readMessages($exchangeName)
+        $this->readMessages($exchangeName)
             ->close();
-    }
-
-    /**
-     * Declare new queue. If it does not exist, it will be created.
-     *
-     * @param string $queueName
-     * @return $this
-     */
-    protected function declareQueue(string $queueName): self
-    {
-        $this->channel->queue_declare(
-            $queueName,
-            false,
-            true,
-            false,
-            false
-        );
-
-        return $this;
     }
 
     /**

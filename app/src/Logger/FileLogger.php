@@ -17,6 +17,7 @@ class FileLogger
             date('Y-m-d\TH:i:s') . ': ' . $message . PHP_EOL,
             file_exists($path) ? FILE_APPEND : null
         );
+        chmod($path, 0777);
     }
 
     /**
@@ -28,5 +29,15 @@ class FileLogger
         return file_get_contents(
             __DIR__ . "/../../logs/" . $fileName . "-" . date("Y-m-d") . ".log"
         );
+    }
+
+    /**
+     * @param string $fileName
+     * @return void
+     */
+    public function clear(string $fileName = 'default'): void
+    {
+        $path = __DIR__ . "/../../logs/" . $fileName . "-" . date("Y-m-d") . ".log";
+        file_put_contents($path, '');
     }
 }

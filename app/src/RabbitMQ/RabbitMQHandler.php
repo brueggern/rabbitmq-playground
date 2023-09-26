@@ -61,6 +61,7 @@ abstract class RabbitMQHandler
             'hello-world' => HelloWorldHandler::class,
             'work-queues' => WorkQueuesHandler::class,
             'publish-subscribe' => PublishSubscribeHandler::class,
+            'routing' => RoutingHandler::class,
             default => null,
         };
         if (!$handlerName) {
