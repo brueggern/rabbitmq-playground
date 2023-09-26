@@ -51,8 +51,9 @@ class RoutingHandler extends RabbitMQHandler
     {
         $msg = new AMQPMessage($message, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
 
-        // First we need to declare the direct exchange.
+        // First we need to declare a direct exchange.
         $this->channel->exchange_declare($exchangeName, 'direct', false, false, false);
+
         $this->channel->basic_publish($msg, $exchangeName, $routingKey);
 
         return $this;
@@ -78,19 +79,18 @@ class RoutingHandler extends RabbitMQHandler
 
         // Then we declare a temporary queue (with a generated name) and bind it to the exchange.
         [$queueName] = $this->channel->queue_declare('', false, false, true, false);
-
+        
+        // Create a binding for each severity we're interested in.
         $severities = match ($exchangeName) {
             'exchange-calendar' => ['info'],
             'exchange-activities' => ['info', 'warning', 'error'],
             default => [],
         };
-
-        // Create a binding for each severity we're interested in.
         foreach ($severities as $severity) {
             $this->channel->queue_bind($queueName, $exchangeName, $severity);
         }
-        $this->channel->basic_consume($queueName, '', false, false, false, false, $callback);
 
+        $this->channel->basic_consume($queueName, '', false, false, false, false, $callback);
         while ($this->channel->is_open()) {
             $this->channel->wait();
         }

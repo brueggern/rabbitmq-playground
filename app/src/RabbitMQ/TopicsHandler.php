@@ -6,7 +6,7 @@ use Brueggern\RabbitmqPlayground\Logger\FileLogger;
 use Exception;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class PublishSubscribeHandler extends RabbitMQHandler
+class TopicsHandler extends RabbitMQHandler
 {
     /**
      * @param string $message
@@ -23,7 +23,7 @@ class PublishSubscribeHandler extends RabbitMQHandler
         ?string $routingKey = null
     ): void
     {
-        $this->sendMessage($message, $exchangeName)
+        $this->sendMessage($message, $exchangeName, $routingKey)
             ->close();
     }
 
@@ -44,16 +44,17 @@ class PublishSubscribeHandler extends RabbitMQHandler
      *
      * @param string $message
      * @param string $exchangeName
+     * @param string $routingKey
      * @return $this
      */
-    protected function sendMessage(string $message, string $exchangeName): self
+    protected function sendMessage(string $message, string $exchangeName, string $routingKey): self
     {
         $msg = new AMQPMessage($message, ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
 
-        // First we need to declare a fanout exchange.
-        $this->channel->exchange_declare($exchangeName, 'fanout', false, false, false);
+        // First we need to declare a topic exchange.
+        $this->channel->exchange_declare($exchangeName, 'topic', false, false, false);
 
-        $this->channel->basic_publish($msg, $exchangeName);
+        $this->channel->basic_publish($msg, $exchangeName, $routingKey);
 
         return $this;
     }
@@ -73,15 +74,23 @@ class PublishSubscribeHandler extends RabbitMQHandler
         // This tells RabbitMQ not to give more than one message to a worker at a time.
         $this->channel->basic_qos(0, 1, false);
 
-        // First we declare a fanout exchange.
-        $this->channel->exchange_declare($exchangeName, 'fanout', false, false, false);
+        // First we declare a topic exchange.
+        $this->channel->exchange_declare($exchangeName, 'topic', false, false, false);
 
         // Then we declare a temporary queue (with a generated name) and bind it to the exchange.
         [$queueName] = $this->channel->queue_declare('', false, false, true, false);
-        $this->channel->queue_bind($queueName, $exchangeName);
+
+        // Create a binding for each topic we're interested in.
+        $topics = match ($exchangeName) {
+            'exchange-calendar' => ['calendar.#'],
+            'exchange-activities' => ['*.*.create', '*.*.update'],
+            default => [],
+        };
+        foreach ($topics as $topic) {
+            $this->channel->queue_bind($queueName, $exchangeName, $topic);
+        }
 
         $this->channel->basic_consume($queueName, '', false, false, false, false, $callback);
-
         while ($this->channel->is_open()) {
             $this->channel->wait();
         }

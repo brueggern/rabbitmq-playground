@@ -71,6 +71,7 @@ abstract class RabbitMQHandler
             'work-queues' => WorkQueuesHandler::class,
             'publish-subscribe' => PublishSubscribeHandler::class,
             'routing' => RoutingHandler::class,
+            'topics' => TopicsHandler::class,
             default => null,
         };
         if (!$handlerName) {

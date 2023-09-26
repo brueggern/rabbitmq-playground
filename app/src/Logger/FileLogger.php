@@ -39,5 +39,6 @@ class FileLogger
     {
         $path = __DIR__ . "/../../logs/" . $fileName . "-" . date("Y-m-d") . ".log";
         file_put_contents($path, '');
+        chmod($path, 0777);
     }
 }
