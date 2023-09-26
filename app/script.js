@@ -3,6 +3,7 @@ const btnClear = document.querySelector('#btnClear');
 const inputMessage = document.querySelector('#inputMessage');
 const inputQueue = document.querySelector('#inputQueue');
 const inputExchange = document.querySelector('#inputExchange');
+const inputRoutingKey = document.querySelector('#inputRoutingKey');
 const queue = document.querySelector('#queue');
 const doConsume = document.querySelector('#doConsume');
 
@@ -17,6 +18,7 @@ btnClear.addEventListener('click', () => {
 inputMessage.addEventListener('keyup', validateForm);
 inputQueue.addEventListener('change', validateForm);
 inputExchange.addEventListener('change', validateForm);
+inputRoutingKey.addEventListener('change', validateForm);
 
 setInterval(() => {
     if (doConsume.checked) {
@@ -27,7 +29,7 @@ setInterval(() => {
     }
 }, 1000);
 
-async function produceMessage(message, queue, exchange) {
+async function produceMessage(message, queue, exchange, routingKey) {
     const response = await fetch("/api/produce.php", {
         method: "POST",
         headers: {
@@ -37,6 +39,7 @@ async function produceMessage(message, queue, exchange) {
             message: message,
             queue: queue,
             exchange: exchange,
+            routing_key: routingKey,
         }),
     });
     return await response.json();
@@ -58,11 +61,14 @@ function validateForm(event) {
         send();
         return;
     }
-    btnProduce.disabled = inputMessage.value === '' || inputQueue.value === '' || inputExchange.value === '';
+    btnProduce.disabled = inputMessage.value === ''
+        || inputQueue.value === ''
+        || inputExchange.value === ''
+        || inputRoutingKey.value === '';
 }
 
 function send() {
-    produceMessage(inputMessage.value, inputQueue.value, inputExchange.value)
+    produceMessage(inputMessage.value, inputQueue.value, inputExchange.value, inputRoutingKey.value)
         .then(function () {
             inputMessage.value = '';
             btnProduce.disabled = true;

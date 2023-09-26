@@ -12,10 +12,16 @@ class WorkQueuesHandler extends RabbitMQHandler
      * @param string $message
      * @param string|null $queueName
      * @param string|null $exchangeName
+     * @param string|null $routingKey
      * @return void
      * @throws Exception
      */
-    function produce(string $message, ?string $queueName = null, ?string $exchangeName = null): void
+    function produce(
+        string  $message,
+        ?string $queueName = null,
+        ?string $exchangeName = null,
+        ?string $routingKey = null
+    ): void
     {
         $this->declareQueue($queueName)
             ->sendMessage($message, $queueName)

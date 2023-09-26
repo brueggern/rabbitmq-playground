@@ -37,10 +37,16 @@ abstract class RabbitMQHandler
      * @param string $message
      * @param string|null $queueName
      * @param string|null $exchangeName
+     * @param string|null $routingKey
      * @return void
      * @throws Exception
      */
-    abstract function produce(string $message, ?string $queueName = null, ?string $exchangeName = null): void;
+    abstract function produce(
+        string  $message,
+        ?string $queueName = null,
+        ?string $exchangeName = null,
+        ?string $routingKey = null
+    ): void;
 
     /**
      * @param string|null $queueName
@@ -48,7 +54,10 @@ abstract class RabbitMQHandler
      * @return void
      * @throws Exception
      */
-    abstract function consume(?string $queueName = null, ?string $exchangeName = null): void;
+    abstract function consume(
+        ?string $queueName = null,
+        ?string $exchangeName = null
+    ): void;
 
     /**
      * @param string $key

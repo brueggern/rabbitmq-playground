@@ -12,10 +12,16 @@ class PublishSubscribeHandler extends RabbitMQHandler
      * @param string $message
      * @param string|null $queueName
      * @param string|null $exchangeName
+     * @param string|null $routingKey
      * @return void
      * @throws Exception
      */
-    function produce(string $message, ?string $queueName = null, ?string $exchangeName = null): void
+    function produce(
+        string  $message,
+        ?string $queueName = null,
+        ?string $exchangeName = null,
+        ?string $routingKey = null
+    ): void
     {
         $this->sendMessage($message, $exchangeName)
             ->close();
@@ -65,7 +71,7 @@ class PublishSubscribeHandler extends RabbitMQHandler
         // This tells RabbitMQ not to give more than one message to a worker at a time.
         $this->channel->basic_qos(0, 1, false);
 
-        // First we declare an exchange
+        // First we declare a fanout exchange.
         $this->channel->exchange_declare($exchangeName, 'fanout', false, false, false);
 
         // Then we declare a temporary queue (with a generated name) and bind it to the exchange.

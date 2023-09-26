@@ -11,6 +11,7 @@ $data = json_decode($json, true);
 $message = $data['message'] ?? null;
 $queueName = $data['queue'] ?? 'default';
 $exchangeName = $data['exchange'] ?? 'default';
+$routingKey = $data['routing_key'] ?? 'info';
 
 if (!$message) {
     header("Content-Type: application/json");
@@ -23,7 +24,7 @@ if (!$message) {
 
 try {
     RabbitMQHandler::resolve($_ENV['HANDLER'])
-        ->produce($message, $queueName, $exchangeName);
+        ->produce($message, $queueName, $exchangeName, $routingKey);
 } catch (Exception $e) {
     header("Content-Type: application/json");
     echo json_encode([
@@ -38,6 +39,7 @@ echo json_encode([
     'message' => $message,
     'queue' => $queueName,
     'exchange' => $exchangeName,
+    'routing_key' => $routingKey,
     'rabbitmq_host' => $_ENV["RABBITMQ_HOST"],
 ]);
 exit();
