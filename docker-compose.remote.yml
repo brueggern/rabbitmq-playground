@@ -32,6 +32,7 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_REMOTE_PASSWORD}
       - HANDLER=${HANDLER}
       - RABBITMQ_QUEUE=queue-calendar
+      - RABBITMQ_EXCHANGE=exchange-calendar
     volumes:
       - ./app:/var/www/html
 
@@ -48,6 +49,7 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_REMOTE_PASSWORD}
       - HANDLER=${HANDLER}
       - RABBITMQ_QUEUE=queue-calendar
+      - RABBITMQ_EXCHANGE=exchange-calendar
     volumes:
       - ./app:/var/www/html
 
@@ -63,7 +65,8 @@ services:
       - RABBITMQ_USER=${RABBITMQ_REMOTE_USER}
       - RABBITMQ_PASSWORD=${RABBITMQ_REMOTE_PASSWORD}
       - HANDLER=${HANDLER}
-      - RABBITMQ_QUEUE=queue-activities
+      - RABBITMQ_QUEUE=queue-calendar
+      - RABBITMQ_EXCHANGE=exchange-calendar
     volumes:
       - ./app:/var/www/html
 

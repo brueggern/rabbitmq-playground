@@ -9,8 +9,8 @@ $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
 $message = $data['message'] ?? null;
-$queueName = $_ENV['RABBITMQ_QUEUE'] ?? 'default';
-$exchangeName = $_ENV['RABBITMQ_EXCHANGE'] ?? 'default';
+$queueName = $data['queue'] ?? 'default';
+$exchangeName = $data['exchange'] ?? 'default';
 
 if (!$message) {
     header("Content-Type: application/json");

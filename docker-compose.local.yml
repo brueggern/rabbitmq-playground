@@ -31,7 +31,6 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_QUEUE=queue-calendar
       - HANDLER=${HANDLER}
     volumes:
       - ./app:/var/www/html
@@ -50,8 +49,9 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_QUEUE=queue-calendar
       - HANDLER=${HANDLER}
+      - RABBITMQ_QUEUE=queue-calendar
+      - RABBITMQ_EXCHANGE=exchange-calendar
     volumes:
       - ./app:/var/www/html
 
@@ -69,8 +69,9 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_QUEUE=queue-calendar
       - HANDLER=${HANDLER}
+      - RABBITMQ_QUEUE=queue-calendar
+      - RABBITMQ_EXCHANGE=exchange-calendar
     volumes:
       - ./app:/var/www/html
 
@@ -88,8 +89,9 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_QUEUE=queue-calendar
       - HANDLER=${HANDLER}
+      - RABBITMQ_QUEUE=queue-activities
+      - RABBITMQ_EXCHANGE=exchange-activities
     volumes:
       - ./app:/var/www/html
 

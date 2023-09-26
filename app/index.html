@@ -4,11 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>RabbitMQ</title>
+  <title>RabbitMQ Playground</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.26/dist/css/uikit.min.css"/>
 </head>
 <body>
 <div class="uk-container">
+  <div class="uk-margin-top uk-text-center">
+    <div class="uk-margin">Playground for</div>
+    <img src="assets/RabbitMQ_logo.svg" alt="RabbitMQ logo" width="300px" class="uk-margin-bottom">
+    <hr>
+  </div>
   <div class="uk-child-width-expand@s" uk-grid>
     <div>
       <div class="uk-card uk-card-body">
@@ -22,6 +27,24 @@
                     aria-label="Input"
                     id="inputMessage"
             />
+            <div class="uk-margin">
+              <label>
+                <span class="uk-text-bold">Queue:</span>
+                <select class="uk-select" id="inputQueue">
+                  <option value="queue-calendar">queue-calendar</option>
+                  <option value="queue-activities">queue-activities</option>
+                </select>
+              </label>
+            </div>
+            <div class="uk-margin">
+              <label>
+                <span class="uk-text-bold">Exchange:</span>
+                <select class="uk-select" id="inputExchange">
+                  <option value="exchange-calendar">exchange-calendar</option>
+                  <option value="exchange-activities">exchange-activities</option>
+                </select>
+              </label>
+            </div>
           </div>
           <div class="uk-margin">
             <button class="uk-button uk-button-primary" type="button" id="btnProduce" disabled>
