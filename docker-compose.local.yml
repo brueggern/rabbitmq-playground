@@ -31,6 +31,8 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_QUEUE=queue-calendar
+      - HANDLER=${HANDLER}
     volumes:
       - ./app:/var/www/html
 
@@ -49,6 +51,7 @@ services:
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_QUEUE=queue-calendar
+      - HANDLER=${HANDLER}
     volumes:
       - ./app:/var/www/html
 
@@ -67,6 +70,7 @@ services:
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_QUEUE=queue-calendar
+      - HANDLER=${HANDLER}
     volumes:
       - ./app:/var/www/html
 
@@ -85,6 +89,7 @@ services:
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_QUEUE=queue-calendar
+      - HANDLER=${HANDLER}
     volumes:
       - ./app:/var/www/html
 

@@ -1,8 +1,8 @@
 const btnProduce = document.querySelector('#btnProduce');
 const inputMessage = document.querySelector('#inputMessage');
 const inputQueue = document.querySelector('#inputQueue');
-const outputQueue = document.querySelector('#outputQueue');
 const queue = document.querySelector('#queue');
+const doConsume = document.querySelector('#doConsume');
 
 btnProduce.addEventListener('click', () => {
     send();
@@ -11,10 +11,12 @@ btnProduce.addEventListener('click', () => {
 inputMessage.addEventListener('keyup', validateForm);
 
 setInterval(() => {
-    fetchMessages()
-        .then(function (response) {
-            queue.innerHTML = response.join('<br>');
-        });
+    if (doConsume.checked) {
+        fetchMessages()
+            .then(function (response) {
+                queue.innerHTML = response.join('<br>');
+            });
+    }
 }, 1000);
 
 async function produceMessage(message) {
@@ -41,11 +43,11 @@ function validateForm(event) {
         send();
         return;
     }
-    btnProduce.disabled = inputMessage.value === '' || inputQueue.value === '';
+    btnProduce.disabled = inputMessage.value === '';
 }
 
 function send() {
-    produceMessage(inputMessage.value, inputQueue.value)
+    produceMessage(inputMessage.value)
         .then(function () {
             inputMessage.value = '';
             btnProduce.disabled = true;

@@ -11,10 +11,11 @@ class FileLogger
      */
     public function log(string $message, string $fileName = 'default'): void
     {
+        $path = __DIR__ . "/../../logs/" . $fileName . "-" . date("Y-m-d") . ".log";
         file_put_contents(
-            __DIR__ . "/../../logs/" . $fileName . "-" . date("Y-m-d") . ".log",
+            $path,
             date('Y-m-d\TH:i:s') . ': ' . $message . PHP_EOL,
-            FILE_APPEND
+            file_exists($path) ? FILE_APPEND : null
         );
     }
 
